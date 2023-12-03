@@ -1,0 +1,15 @@
+C:\Users\micha\source\repos\Data Structures & Algorithms\Data Structures & Algorithms\bin\Release\net7.0\Data Structures & Algorithms.exe
+C:\Users\micha\source\repos\Data Structures & Algorithms\Data Structures & Algorithms\bin\Release\net7.0\Data Structures & Algorithms.deps.json
+C:\Users\micha\source\repos\Data Structures & Algorithms\Data Structures & Algorithms\bin\Release\net7.0\Data Structures & Algorithms.runtimeconfig.json
+C:\Users\micha\source\repos\Data Structures & Algorithms\Data Structures & Algorithms\bin\Release\net7.0\Data Structures & Algorithms.dll
+C:\Users\micha\source\repos\Data Structures & Algorithms\Data Structures & Algorithms\bin\Release\net7.0\Data Structures & Algorithms.pdb
+C:\Users\micha\source\repos\Data Structures & Algorithms\Data Structures & Algorithms\obj\Release\net7.0\Data Structures & Algorithms.csproj.AssemblyReference.cache
+C:\Users\micha\source\repos\Data Structures & Algorithms\Data Structures & Algorithms\obj\Release\net7.0\Data Structures & Algorithms.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\micha\source\repos\Data Structures & Algorithms\Data Structures & Algorithms\obj\Release\net7.0\Data Structures & Algorithms.AssemblyInfoInputs.cache
+C:\Users\micha\source\repos\Data Structures & Algorithms\Data Structures & Algorithms\obj\Release\net7.0\Data Structures & Algorithms.AssemblyInfo.cs
+C:\Users\micha\source\repos\Data Structures & Algorithms\Data Structures & Algorithms\obj\Release\net7.0\Data Structures & Algorithms.csproj.CoreCompileInputs.cache
+C:\Users\micha\source\repos\Data Structures & Algorithms\Data Structures & Algorithms\obj\Release\net7.0\Data Structures & Algorithms.dll
+C:\Users\micha\source\repos\Data Structures & Algorithms\Data Structures & Algorithms\obj\Release\net7.0\refint\Data Structures & Algorithms.dll
+C:\Users\micha\source\repos\Data Structures & Algorithms\Data Structures & Algorithms\obj\Release\net7.0\Data Structures & Algorithms.pdb
+C:\Users\micha\source\repos\Data Structures & Algorithms\Data Structures & Algorithms\obj\Release\net7.0\Data Structures & Algorithms.genruntimeconfig.cache
+C:\Users\micha\source\repos\Data Structures & Algorithms\Data Structures & Algorithms\obj\Release\net7.0\ref\Data Structures & Algorithms.dll

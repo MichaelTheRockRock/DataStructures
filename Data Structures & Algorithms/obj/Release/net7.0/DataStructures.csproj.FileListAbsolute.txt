@@ -1,0 +1,5 @@
+C:\Users\micha\source\repos\Data Structures & Algorithms\Data Structures & Algorithms\obj\Release\net7.0\DataStructures.csproj.AssemblyReference.cache
+C:\Users\micha\source\repos\Data Structures & Algorithms\Data Structures & Algorithms\obj\Release\net7.0\DataStructures.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\micha\source\repos\Data Structures & Algorithms\Data Structures & Algorithms\obj\Release\net7.0\DataStructures.AssemblyInfoInputs.cache
+C:\Users\micha\source\repos\Data Structures & Algorithms\Data Structures & Algorithms\obj\Release\net7.0\DataStructures.AssemblyInfo.cs
+C:\Users\micha\source\repos\Data Structures & Algorithms\Data Structures & Algorithms\obj\Release\net7.0\DataStructures.csproj.CoreCompileInputs.cache
