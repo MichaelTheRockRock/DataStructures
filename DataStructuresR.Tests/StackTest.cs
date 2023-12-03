@@ -8,7 +8,7 @@ namespace DataStructuresR.Tests
 {
     // TODO: Finish Unit Tests
     [TestClass]
-    internal class StackTest
+    public class StackTest
     {
     }
 }

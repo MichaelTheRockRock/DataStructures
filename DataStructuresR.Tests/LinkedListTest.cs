@@ -5,7 +5,6 @@ using System.Diagnostics;
 
 namespace DataStructuresR.Tests
 {
-    // TODO: Finish Unit Tests
     [TestClass]
     public class LinkedListTest
     {
