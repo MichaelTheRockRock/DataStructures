@@ -28,6 +28,7 @@ namespace DataStructuresR
             if (IsEmpty())
             {
                 tail = node;
+                count++;
                 return;
             }
 
