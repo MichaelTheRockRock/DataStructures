@@ -49,9 +49,12 @@ namespace DataStructuresR.Tests
             StackR<int> stack = new StackR<int>();
 
             stack.Push(8);
-            stack.Push(16);
-            stack.Push(32);
+            Assert.AreEqual(8, stack.Peek());
 
+            stack.Push(16);
+            Assert.AreEqual(16, stack.Peek());
+
+            stack.Push(32);
             Assert.AreEqual(32, stack.Peek());
         }
 
