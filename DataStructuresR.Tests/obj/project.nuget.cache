@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "z47gJoNey21Aus6UmLUdhcSjUjumx5O8sXbo48+Dr7xP4q093GTQkbyJj2x4Yw4RAWL5RSQUGRj+fiO5Xv1nxQ==",
+  "dgSpecHash": "yQwaqgEz6Hc9INM+6wT89oS14Qs3UHJhZTJD2DJNcYCLY+9v7ge3ACZGSKCBTWfzgcuzZa82Fr/7w86jTFSLkw==",
   "success": true,
   "projectFilePath": "C:\\Users\\micha\\source\\repos\\Data Structures & Algorithms\\DataStructuresR.Tests\\DataStructuresR.Tests.csproj",
   "expectedPackageFiles": [
@@ -17,6 +17,7 @@
     "C:\\Users\\micha\\.nuget\\packages\\nuget.frameworks\\6.5.0\\nuget.frameworks.6.5.0.nupkg.sha512",
     "C:\\Users\\micha\\.nuget\\packages\\runtime.native.system\\4.3.0\\runtime.native.system.4.3.0.nupkg.sha512",
     "C:\\Users\\micha\\.nuget\\packages\\system.collections\\4.3.0\\system.collections.4.3.0.nupkg.sha512",
+    "C:\\Users\\micha\\.nuget\\packages\\system.collections.nongeneric\\4.3.0\\system.collections.nongeneric.4.3.0.nupkg.sha512",
     "C:\\Users\\micha\\.nuget\\packages\\system.diagnostics.debug\\4.3.0\\system.diagnostics.debug.4.3.0.nupkg.sha512",
     "C:\\Users\\micha\\.nuget\\packages\\system.diagnostics.textwritertracelistener\\4.3.0\\system.diagnostics.textwritertracelistener.4.3.0.nupkg.sha512",
     "C:\\Users\\micha\\.nuget\\packages\\system.diagnostics.tracesource\\4.3.0\\system.diagnostics.tracesource.4.3.0.nupkg.sha512",

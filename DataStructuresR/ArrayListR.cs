@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -48,6 +49,16 @@ namespace DataStructuresR
 
                     items = newArray;
                 }
+
+                size = value;
+            }
+        }
+
+        private void ResizeIfNecessary()
+        {
+            if (Count == Size)
+            {
+                Size = Size * 2;
             }
         }
 
@@ -55,6 +66,7 @@ namespace DataStructuresR
 
         public ArrayListR()
         {
+
             items = new T[DefaultSize];
             size = DefaultSize;
 
@@ -83,46 +95,30 @@ namespace DataStructuresR
 
         public IEnumerator<T> GetEnumerator()
         {
-            throw new NotImplementedException();
+            return new EnumeratorArrayListR(this);
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            throw new NotImplementedException();
+            return GetEnumerator();
         }
 
         public int IndexOf(T item)
         {
-            Type? type = Nullable.GetUnderlyingType(typeof(T));
-
-            if (type == null && item == null)
-            {
-                return -1;
-            }
-
             for (int i = 0; i < Count; i++)
             {
                 T value = items[i];
 
-                // Type is not nullable.
-                if (type == null)
+                if (item == null)
                 {
-                    if (item != null && item.Equals(value))
+                    if (value == null)
                         return i;
                 }
                 else
                 {
-                    if (item == null)
-                    {
-                        if (value == null)
-                            return i;
-                    }
-                    else
-                    {
-                        if (item.Equals(value))
-                            return i;
-                    }
-                }
+                    if (item.Equals(value))
+                        return i;
+                }                
             }
 
             return -1;
@@ -130,29 +126,84 @@ namespace DataStructuresR
 
         public void Insert(int index, T item)
         {
-            throw new NotImplementedException();
+            if (index < 0 || index > Count - 1)
+                throw new IndexOutOfRangeException();
+
+            ResizeIfNecessary();
+
+            //Make a new array
+            T[] newList = new T[Size];
+
+            int newCount = 0;
+
+            // Copy all items from list below index
+            for (int i = newCount; i < index; i++, newCount++)
+            {
+                newList[i] = items[i];
+            }
+
+            // Add item to the new array
+
+            newList[newCount] = item;
+            newCount++;
+
+            // Add all items from index and above to the new array.
+            for (int i = index; i < Count; i++, newCount++)
+            {
+                newList[newCount] = items[i];
+            }
+
+            // set list to the new array.
+            items = newList;
+            Count++;
         }
 
         public void RemoveAt(int index)
         {
-            throw new NotImplementedException();
+            if (index < 0 || index > Count - 1)
+                throw new IndexOutOfRangeException("index");
+
+            if (index < Count - 1)
+            {
+                Array.Copy(items, index + 1, items, index, Count - 1 - index);
+            }
+
+            items[Count - 1] = default!;
+            Count--;
         }
 
         public void Add(T item)
         {
-            // If the number of items in the array is equal to the size, then double the size.
-            if (Count == Size)
-            {
-                Size = Size * 2;
-            }
+            ResizeIfNecessary();
 
             items[Count] = item;
             Count++;
         }
 
         public void Clear()
-        {
-            items = new T[DefaultSize];
+        {            
+            if (typeof(T).GetInterfaces().Any(x => x.Name.Equals("Disposable")))
+            {
+                try
+                {
+                    for (int i = 0; i < Count; i++)
+                    {
+                        if (items[i] != null)
+                            ((IDisposable)items[i]!).Dispose();
+                    }   
+                }
+                catch (NotImplementedException)
+                {
+                    // Will do nothing if the disposable method has not been implemented.
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
+            }
+
+            items = new T[Size];
+            Count = 0;
         }
 
         public bool Contains(T item)
@@ -167,12 +218,112 @@ namespace DataStructuresR
 
         public void CopyTo(T[] array, int arrayIndex)
         {
-            throw new NotImplementedException();
+            if (array == null) 
+                throw new ArgumentNullException("array");
+
+            if (arrayIndex < 0 || arrayIndex >= array.Length)
+                throw new ArgumentOutOfRangeException("arrayIndex");
+
+            if (array.Length - arrayIndex < Count)
+                throw new ArgumentOutOfRangeException("The collection is to large to copy to the allocated memory in array.");
+
+            Array.Copy(items, 0, array, arrayIndex, Count);
         }
 
         public bool Remove(T item)
         {
-            throw new NotImplementedException();
+            for (int i = 0; i < Count; i++)
+            {
+                if (EqualityComparer<T>.Default.Equals(items[i], item))
+                {
+                    // Remove the item.
+
+                    //make new array
+                    if (i < Count - 1)
+                    {
+                        Array.Copy(items, i + 1, items, i, Count - 1 - i);
+                    }
+
+                    items[Count - 1] = default!;
+                    Count--;
+
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        public class EnumeratorArrayListR : IEnumerator<T>, IEnumerator
+        {
+            private readonly ArrayListR<T> _list;
+            private T? _currentValue;
+            private int _index;
+
+            public T Current => _currentValue!;
+
+            object IEnumerator.Current
+            {
+                get {
+
+                    if (_index == 0 || _index > _list.Count)
+                        throw new Exception("Cannot access list with currently set index");
+
+                    return Current!;
+                }
+
+            }
+                
+
+            internal EnumeratorArrayListR(ArrayListR<T> list)
+            {
+                _list = list;
+                _currentValue = default;
+                _index = 0;
+            }
+            
+            public void Dispose()
+            {
+                if (_currentValue != null)
+                {
+                    if (_currentValue.GetType().GetInterfaces().Any(x => x.Name.Equals("IDisposable")))
+                    {
+                        try
+                        {
+                            ((IDisposable)_currentValue).Dispose();
+                        } catch (NotImplementedException)
+                        {
+                            // Will do nothing if the disposable method has not been implemented.
+                        } catch (Exception)
+                        {
+                            throw;
+                        }
+
+                    }
+                }
+            }
+
+            public bool MoveNext()
+            {
+                if (_index == _list.Count)
+                {
+                    _index++;
+                    return false;
+                }
+
+                _currentValue = _list[_index];
+                _index++;
+
+                return true;
+            }
+
+            public void Reset()
+            {
+                _currentValue = default;
+                _index = 0;
+            }
         }
     }
+
+
 }
