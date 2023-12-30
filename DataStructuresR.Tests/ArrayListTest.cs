@@ -429,5 +429,140 @@ namespace DataStructuresR.Tests
             Assert.AreEqual(0, list.Count);
             Assert.AreEqual(16, list.Size);
         }
+
+        [TestMethod]
+        public void TestContains()
+        {
+            ArrayListR<int> list = new ArrayListR<int>();
+
+            Assert.IsFalse(list.Contains(2));
+
+            list.Add(2);
+            list.Add(4);
+            list.Add(8);
+            list.Add(16);
+            list.Add(32);
+            list.Add(64);
+            list.Add(128);
+            list.Add(256);
+
+            Assert.IsTrue(list.Contains(32));
+            Assert.IsFalse(list.Contains(555));
+        }
+
+        [TestMethod]
+        public void TestContainsWithNullableObjects()
+        {
+            ArrayListR<string?> list = new ArrayListR<string?>();
+
+            Assert.IsFalse(list.Contains("Fizz"));
+            Assert.IsFalse(list.Contains(null));
+
+            list.Add("Fizz");
+            list.Add("Buzz");
+            list.Add("Lizz");
+
+            Assert.IsTrue(list.Contains("Buzz"));
+            Assert.IsFalse(list.Contains("Buxx"));
+            Assert.IsFalse(list.Contains(null));
+
+            list.Add(null);
+
+            Assert.IsTrue(list.Contains("Buzz"));
+            Assert.IsFalse(list.Contains("Buxx"));
+            Assert.IsTrue(list.Contains(null));
+        }
+
+        [TestMethod]
+        public void TestRemove()
+        {
+            ArrayListR<int> list = new ArrayListR<int>();
+
+            Assert.IsFalse(list.Remove(2));
+
+            list.Add(2);
+            list.Add(4);
+            list.Add(8);
+            list.Add(16);
+            list.Add(32);
+            list.Add(64);
+            list.Add(128);
+            list.Add(256);
+
+            Assert.IsTrue(list.Remove(32));
+            Assert.IsFalse(list.Contains(32));
+            Assert.AreEqual(7, list.Count);
+
+            Assert.IsFalse(list.Remove(555));
+
+            list.Add(32);
+            list.Add(32);
+
+            Assert.AreEqual(9, list.Count);
+
+            Assert.IsTrue(list.Remove(32));
+            Assert.IsTrue(list.Contains(32));
+
+            Assert.AreEqual(8, list.Count);
+
+            int count = 0;
+
+            foreach(int item in list)
+            {
+                if (item == 32)
+                    count++;
+            }
+
+            Assert.AreEqual(1, count);
+        }
+
+        [TestMethod]
+        public void TestRemoveWithNullable()
+        {
+            ArrayListR<string?> list = new ArrayListR<string?>();
+
+            Assert.IsFalse(list.Remove("Fizz"));
+            Assert.IsFalse(list.Remove(null));
+
+            list.Add("Fizz");
+            list.Add("Buzz");
+            list.Add("Lizz");
+
+            Assert.IsTrue(list.Remove("Buzz"));
+            Assert.IsFalse(list.Contains("Buzz"));
+            Assert.AreEqual(2, list.Count);
+
+            Assert.IsFalse(list.Remove("Subb"));
+            Assert.IsFalse(list.Remove(null));
+
+            list.Add("Buzz");
+            list.Add("Buzz");
+            list.Add(null);
+
+            Assert.AreEqual(5, list.Count);
+
+            Assert.IsTrue(list.Contains("Buzz"));
+            Assert.IsTrue(list.Contains(null));
+
+            Assert.IsTrue(list.Remove("Buzz"));
+            Assert.AreEqual(4, list.Count);
+            Assert.IsTrue(list.Remove(null));
+            Assert.AreEqual(3, list.Count);
+
+            int buzzCount = 0;
+            int nullCount = 0;
+
+            foreach(string? item in list)
+            {
+                if (item == "Buzz")
+                    buzzCount++;
+
+                if (item == null)
+                    nullCount++;
+            }
+
+            Assert.AreEqual(1, buzzCount);
+            Assert.AreEqual(0, nullCount);
+        }
     }
 }
