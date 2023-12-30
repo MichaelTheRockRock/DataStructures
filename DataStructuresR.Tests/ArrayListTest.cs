@@ -564,5 +564,177 @@ namespace DataStructuresR.Tests
             Assert.AreEqual(1, buzzCount);
             Assert.AreEqual(0, nullCount);
         }
+
+        [TestMethod]
+        public void TestCopyTo()
+        {
+            ArrayListR<int> list = new ArrayListR<int>();
+
+            list.Add(2);
+            list.Add(4);
+            list.Add(8);
+            list.Add(16);
+            list.Add(32);
+            list.Add(64);
+            list.Add(128);
+            list.Add(256);
+
+            int[]? nullArray = null;
+
+            Assert.ThrowsException<ArgumentNullException>(() => list.CopyTo(nullArray, 0));
+
+            int[] smallArray = new int[4];
+
+            Assert.ThrowsException<ArgumentOutOfRangeException>(() => list.CopyTo(smallArray, 0));
+
+            Assert.ThrowsException<ArgumentOutOfRangeException>(() => list.CopyTo(smallArray, 4));
+
+            
+
+
+            int[] normalArray = new int[list.Count];
+
+            Assert.ThrowsException<ArgumentOutOfRangeException>(() => list.CopyTo(normalArray, list.Count));
+
+            list.CopyTo(normalArray, 0);
+
+            int count = 0;
+
+            foreach (int item in list)
+            {
+                Console.WriteLine(item);
+                switch (item)
+                {
+                    case 2:
+                        Assert.AreEqual(0, count);
+                        break;
+                    case 4:
+                        Assert.AreEqual(1, count);
+                        break;
+                    case 8:
+                        Assert.AreEqual(2, count);
+                        break;
+                    case 16:
+                        Assert.AreEqual(3, count);
+                        break;
+                    case 32:
+                        Assert.AreEqual(4, count);
+                        break;
+                    case 64:
+                        Assert.AreEqual(5, count);
+                        break;
+                    case 128:
+                        Assert.AreEqual(6, count);
+                        break;
+                    case 256:
+                        Assert.AreEqual(7, count);
+                        break;
+                    default:
+                        throw NotInDataSetException<int>.GetException(item);
+                }
+
+                count++;
+            }
+
+            Console.WriteLine("");
+            Console.WriteLine("");
+
+            int[] largeArray = new int[12];
+
+            list.CopyTo(largeArray, 4);
+
+            count = 0;
+
+            foreach(int item in largeArray) 
+            {
+                Console.WriteLine(item);
+
+                switch (item)
+                {
+                    case 0:
+                        if (count != 0 && count != 1 && count != 2 && count != 3)
+                            Assert.Fail();
+                        break;
+                    case 2:
+                        Assert.AreEqual(4, count);
+                        break;
+                    case 4:
+                        Assert.AreEqual(5, count);
+                        break;
+                    case 8:
+                        Assert.AreEqual(6, count);
+                        break;
+                    case 16:
+                        Assert.AreEqual(7, count);
+                        break;
+                    case 32:
+                        Assert.AreEqual(8, count);
+                        break;
+                    case 64:
+                        Assert.AreEqual(9, count);
+                        break;
+                    case 128:
+                        Assert.AreEqual(10, count);
+                        break;
+                    case 256:
+                        Assert.AreEqual(11, count);
+                        break;
+                    default:
+                        throw NotInDataSetException<int>.GetException(item);
+                }
+
+                count++;
+            }
+
+            Console.WriteLine("");
+            Console.WriteLine("");
+
+            list.CopyTo(largeArray, 0);
+
+            count = 0;
+
+            foreach (int item in largeArray)
+            {
+                Console.WriteLine(item);
+
+                switch (item)
+                {
+                    case 2:
+                        Assert.AreEqual(0, count);
+                        break;
+                    case 4:
+                        Assert.AreEqual(1, count);
+                        break;
+                    case 8:
+                        Assert.AreEqual(2, count);
+                        break;
+                    case 16:
+                        Assert.AreEqual(3, count);
+                        break;
+                    case 32:
+
+                        if (count != 4 && count != 8)
+                            Assert.Fail();
+                        break;
+                    case 64:
+                        if (count != 5 && count != 9)
+                            Assert.Fail();
+                        break;
+                    case 128:
+                        if (count != 6 && count != 10)
+                            Assert.Fail();
+                        break;
+                    case 256:
+                        if (count != 7 && count != 11)
+                            Assert.Fail();
+                        break;
+                    default:
+                        throw NotInDataSetException<int>.GetException(item);
+                }
+
+                count++;
+            }
+
+        }
     }
 }
