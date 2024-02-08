@@ -361,3 +361,67 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/Data Structures & Algorithms/bin/Debug/net7.0/DataStructureDemos.dll
+/Data Structures & Algorithms/bin/Debug/net7.0/DataStructureDemos.exe
+/Data Structures & Algorithms/bin/Debug/net7.0/DataStructureDemos.pdb
+/Data Structures & Algorithms/bin/Debug/net7.0/DataStructuresR.dll
+/Data Structures & Algorithms/bin/Debug/net7.0/DataStructuresR.pdb
+/Data Structures & Algorithms/bin/Debug/net7.0/DataStructureDemos.dll
+/Data Structures & Algorithms/bin/Debug/net7.0/DataStructureDemos.exe
+/Data Structures & Algorithms/bin/Debug/net7.0/DataStructureDemos.pdb
+/Data Structures & Algorithms/bin/Debug/net7.0/DataStructuresR.dll
+/Data Structures & Algorithms/bin/Debug/net7.0/DataStructuresR.pdb
+/Data Structures & Algorithms/obj/Debug/net7.0/apphost.exe
+/Data Structures & Algorithms/obj/Debug/net7.0/DataStructureDemos.AssemblyInfo.cs
+/Data Structures & Algorithms/obj/Debug/net7.0/DataStructureDemos.AssemblyInfoInputs.cache
+/Data Structures & Algorithms/obj/Debug/net7.0/DataStructureDemos.assets.cache
+/Data Structures & Algorithms/obj/Debug/net7.0/DataStructureDemos.csproj.AssemblyReference.cache
+/Data Structures & Algorithms/obj/Debug/net7.0/DataStructureDemos.csproj.CoreCompileInputs.cache
+/Data Structures & Algorithms/obj/Debug/net7.0/DataStructureDemos.csproj.FileListAbsolute.txt
+/Data Structures & Algorithms/obj/Debug/net7.0/DataStructureDemos.dll
+/Data Structures & Algorithms/obj/Debug/net7.0/DataStructureDemos.GeneratedMSBuildEditorConfig.editorconfig
+/Data Structures & Algorithms/obj/Debug/net7.0/DataStructureDemos.genruntimeconfig.cache
+/Data Structures & Algorithms/obj/Debug/net7.0/DataStructureDemos.pdb
+/Data Structures & Algorithms/obj/Debug/net7.0/ref/DataStructureDemos.dll
+/Data Structures & Algorithms/obj/Debug/net7.0/refint/DataStructureDemos.dll
+/Data Structures & Algorithms/obj/DataStructureDemos.csproj.nuget.dgspec.json
+/Data Structures & Algorithms/obj/DataStructureDemos.csproj.nuget.g.props
+/Data Structures & Algorithms/obj/project.assets.json
+/Data Structures & Algorithms/obj/project.nuget.cache
+/DataStructuresR/bin/Debug/net7.0/DataStructuresR.dll
+/DataStructuresR/bin/Debug/net7.0/DataStructuresR.pdb
+/DataStructuresR/obj/DataStructuresR.csproj.nuget.dgspec.json
+/DataStructuresR/obj/DataStructuresR.csproj.nuget.g.props
+/DataStructuresR/obj/Debug/net7.0/DataStructuresR.AssemblyInfo.cs
+/DataStructuresR/obj/Debug/net7.0/DataStructuresR.AssemblyInfoInputs.cache
+/DataStructuresR/obj/Debug/net7.0/DataStructuresR.assets.cache
+/DataStructuresR/obj/Debug/net7.0/DataStructuresR.csproj.CoreCompileInputs.cache
+/DataStructuresR/obj/Debug/net7.0/DataStructuresR.csproj.FileListAbsolute.txt
+/DataStructuresR/obj/Debug/net7.0/DataStructuresR.dll
+/DataStructuresR/obj/Debug/net7.0/DataStructuresR.GeneratedMSBuildEditorConfig.editorconfig
+/DataStructuresR/obj/Debug/net7.0/DataStructuresR.pdb
+/DataStructuresR/obj/Debug/net7.0/ref/DataStructuresR.dll
+/DataStructuresR/obj/Debug/net7.0/refint/DataStructuresR.dll
+/DataStructuresR/obj/project.assets.json
+/DataStructuresR/obj/project.nuget.cache
+/DataStructuresR.Tests/bin/Debug/net7.0/CoverletSourceRootsMapping
+/DataStructuresR.Tests/bin/Debug/net7.0/DataStructuresR.dll
+/DataStructuresR.Tests/bin/Debug/net7.0/DataStructuresR.pdb
+/DataStructuresR.Tests/bin/Debug/net7.0/DataStructuresR.Tests.dll
+/DataStructuresR.Tests/bin/Debug/net7.0/DataStructuresR.Tests.pdb
+/DataStructuresR.Tests/obj/Debug/net7.0/DataStructuresR.Tests.AssemblyInfo.cs
+/DataStructuresR.Tests/obj/Debug/net7.0/DataStructuresR.Tests.AssemblyInfoInputs.cache
+/DataStructuresR.Tests/obj/Debug/net7.0/DataStructuresR.Tests.assets.cache
+/DataStructuresR.Tests/obj/Debug/net7.0/DataStructuresR.Tests.csproj.AssemblyReference.cache
+/DataStructuresR.Tests/obj/Debug/net7.0/DataStructuresR.Tests.csproj.CoreCompileInputs.cache
+/DataStructuresR.Tests/obj/Debug/net7.0/DataStructuresR.Tests.csproj.FileListAbsolute.txt
+/DataStructuresR.Tests/obj/Debug/net7.0/DataStructuresR.Tests.dll
+/DataStructuresR.Tests/obj/Debug/net7.0/DataStructuresR.Tests.GeneratedMSBuildEditorConfig.editorconfig
+/DataStructuresR.Tests/obj/Debug/net7.0/DataStructuresR.Tests.genruntimeconfig.cache
+/DataStructuresR.Tests/obj/Debug/net7.0/DataStructuresR.Tests.pdb
+/DataStructuresR.Tests/obj/Debug/net7.0/ref/DataStructuresR.Tests.dll
+/DataStructuresR.Tests/obj/Debug/net7.0/refint/DataStructuresR.Tests.dll
+/DataStructuresR.Tests/obj/DataStructuresR.Tests.csproj.nuget.dgspec.json
+/DataStructuresR.Tests/obj/DataStructuresR.Tests.csproj.nuget.g.props
+/DataStructuresR.Tests/obj/project.assets.json
+/DataStructuresR.Tests/obj/project.nuget.cache
