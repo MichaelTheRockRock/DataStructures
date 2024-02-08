@@ -361,3 +361,18 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/Data Structures & Algorithms/obj/Debug/net7.0/DataStructureDemos.AssemblyInfo.cs
+/Data Structures & Algorithms/obj/Debug/net7.0/DataStructureDemos.AssemblyInfoInputs.cache
+/Data Structures & Algorithms/obj/Debug/net7.0/DataStructureDemos.assets.cache
+/Data Structures & Algorithms/obj/Debug/net7.0/DataStructureDemos.csproj.AssemblyReference.cache
+/Data Structures & Algorithms/obj/Debug/net7.0/DataStructureDemos.GeneratedMSBuildEditorConfig.editorconfig
+/DataStructuresR/obj/Debug/net7.0/DataStructuresR.AssemblyInfo.cs
+/DataStructuresR/obj/Debug/net7.0/DataStructuresR.AssemblyInfoInputs.cache
+/DataStructuresR/obj/Debug/net7.0/DataStructuresR.assets.cache
+/DataStructuresR/obj/Debug/net7.0/DataStructuresR.GeneratedMSBuildEditorConfig.editorconfig
+/DataStructuresR.Tests/bin/Debug/net7.0/CoverletSourceRootsMapping
+/DataStructuresR.Tests/obj/Debug/net7.0/DataStructuresR.Tests.AssemblyInfo.cs
+/DataStructuresR.Tests/obj/Debug/net7.0/DataStructuresR.Tests.AssemblyInfoInputs.cache
+/DataStructuresR.Tests/obj/Debug/net7.0/DataStructuresR.Tests.assets.cache
+/DataStructuresR.Tests/obj/Debug/net7.0/DataStructuresR.Tests.csproj.AssemblyReference.cache
+/DataStructuresR.Tests/obj/Debug/net7.0/DataStructuresR.Tests.GeneratedMSBuildEditorConfig.editorconfig
