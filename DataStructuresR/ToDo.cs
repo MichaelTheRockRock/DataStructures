@@ -10,11 +10,9 @@ namespace DataStructuresR
     {
         /* TODO: Data Structures to Implement
          * 
-         * Queue
          * Hash Tables
          * Tree
          * Graph
-         * Array List
          * StringBuilder
          * */
     }
