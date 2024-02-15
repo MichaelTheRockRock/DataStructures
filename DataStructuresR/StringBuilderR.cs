@@ -319,15 +319,7 @@ namespace DataStructuresR
 
         public StringBuilderR Replace(char oldChar, char newChar)
         {
-            // ToDo: See if I should just call the substring equivalent to this one.
-
-            for (int i = 0; i < this.Length; i++)
-            {
-                if (characters[i] == oldChar)
-                    characters[i] = newChar;
-            }
-
-            return this;
+            return Replace(oldChar, newChar, 0, this.Length);
         }
 
         public StringBuilderR Replace(string oldValue, string? newValue)
@@ -352,11 +344,10 @@ namespace DataStructuresR
             // oldValue because that is the maximum number times that old value can be found in current instance.
             List<int> foundMatches = new List<int>();
 
-            int cycleIncrement;
-            for (int i = 0; i < this.Length; i = i + cycleIncrement)
+            for (int i = 0, j = 0, cycleIncrement = 1;
+                i < this.Length;
+                i = i + cycleIncrement, j = 0, cycleIncrement = 1)
             {
-                int j = 0;
-
                 while(j < oldValue.Length && characters[i + j] == oldValue[j])
                     j++;
 
@@ -364,10 +355,6 @@ namespace DataStructuresR
                 {
                     cycleIncrement = oldValue.Length;
                     foundMatches.Add(i);
-                }
-                else
-                {
-                    cycleIncrement = 1;
                 }
             }
 
@@ -440,11 +427,17 @@ namespace DataStructuresR
 
         public StringBuilderR Replace(char oldChar, char newChar, int startIndex, int length)
         {
+            if (this.Length == 0)
+                return this;
+
             if (startIndex >= this.characters.Length)
-                throw new ArgumentOutOfRangeException("startIndex");
+                throw new ArgumentOutOfRangeException(nameof(startIndex), "The start index cannot larger than the current length of the screen.");
+
+            if (startIndex < 0)
+                throw new ArgumentOutOfRangeException(nameof(startIndex), "The start index cannot be less than 0.");
 
             if (startIndex + length >= this.characters.Length)
-                throw new ArgumentOutOfRangeException("length");
+                throw new ArgumentOutOfRangeException(nameof(length), "The specified length of the substring exceededs the current string's length from the specified index.");
 
             for (int i = startIndex, limit = startIndex + length; i < limit; i++)
             {
@@ -480,21 +473,18 @@ namespace DataStructuresR
             // Find matches within the substring.
             List<int> foundMatches = new List<int>();
 
-            // Get substring
-
-
-            bool matchedOldValue;
-            for (int i = startIndex, j = 0; j < length; i = i + (matchedOldValue ? oldValue.Length : 1), j = j + (matchedOldValue ? oldValue.Length : 1))
+            //int cycleIncrement;
+            for (int i = startIndex, h = 0, limit = startIndex + length, cycleIncrement = 1;
+                i < limit; 
+                i = i + cycleIncrement, h = 0, cycleIncrement = 1)
             {
-                matchedOldValue = false;
-                int h = 0;
 
                 while (h < oldValue.Length && characters[i + h] == oldValue[h])
                     h++;
 
                 if (h == oldValue.Length)
                 {
-                    matchedOldValue = true;
+                    cycleIncrement = oldValue.Length;
                     foundMatches.Add(i);
                 }
             }
