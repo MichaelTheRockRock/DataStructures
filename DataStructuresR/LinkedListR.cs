@@ -343,7 +343,7 @@ namespace DataStructuresR
 
             public T Current => _currentValue!;
 
-            object? IEnumerator.Current
+            object IEnumerator.Current
             {
                 get
                 {
@@ -351,14 +351,14 @@ namespace DataStructuresR
                     if (_index == 0 || _index > _list.count)
                         throw new Exception("Cannot access list with currently set index");
 
-                    return Current;
+                    return Current!;
                 }
             }
             
 
             public void Dispose()
             {
-                // No unmanaged resources to dipose of.
+                throw new NotImplementedException();
             }
 
             public bool MoveNext()
