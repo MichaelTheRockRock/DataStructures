@@ -319,114 +319,21 @@ namespace DataStructuresR
 
         public StringBuilderR Replace(char oldChar, char newChar)
         {
+            // Call the substring version of the method because 
+            // the full length of the current string is just the larges substring
             return Replace(oldChar, newChar, 0, this.Length);
         }
 
         public StringBuilderR Replace(string oldValue, string? newValue)
         {
-            // ToDo: see if I should just call the substring quivalent from this one.
-
-            if (string.IsNullOrEmpty(oldValue))
-                throw new ArgumentException("The value being replaced cannot be an empty string.", "oldValue");
-
-            // There will be no match of the oldValue if it is longer than the current sequence of characters
-            // Then just return the current instance.
-            if (this.Length < oldValue.Length)
-                return this;
-
-            // If the oldValue and the newValue are both a single character,
-            // then call the equivalent method to replace a single character with another.
-            if (oldValue.Length == 1 && newValue != null && newValue.Length == 1)
-                return Replace(oldValue[0], newValue[0]);
-
-
-            // Create an array the size of the length of the current characters divided by the length of the
-            // oldValue because that is the maximum number times that old value can be found in current instance.
-            List<int> foundMatches = new List<int>();
-
-            for (int i = 0, j = 0, cycleIncrement = 1;
-                i < this.Length;
-                i = i + cycleIncrement, j = 0, cycleIncrement = 1)
-            {
-                while(j < oldValue.Length && characters[i + j] == oldValue[j])
-                    j++;
-
-                if (j == oldValue.Length)
-                {
-                    cycleIncrement = oldValue.Length;
-                    foundMatches.Add(i);
-                }
-            }
-
-            // If more than one match is found then the untouched characters
-            // and the replaced characters need to be copied to a new char array.
-            // The character array will be set to this new copy.
-            if (foundMatches.Count > 0)
-            {
-                int newValueLength = 0;
-                char[]? newValueChars = null;
-
-                if (!string.IsNullOrEmpty(newValue))
-                {
-                    newValueLength = newValue.Length;
-                    newValueChars = newValue.ToCharArray();
-                }
-                
-
-                // Substract the product of the old string's length and the number of matches of the old string from the current length.
-                // Then add the product of the new string's length and the number of matches of the old string to the current length.
-                int newLength = characters.Length - (oldValue.Length * foundMatches.Count) + (newValueLength * foundMatches.Count);
-
-                while (newLength > this.Capacity)
-                    IncreaseCapacity();
-
-                char[] newChars = new char[this.Capacity];
-
-                // iterate through the instances of where the oldValue was found in the new array.
-                int oldArrayIndex = 0,
-                    newArrayIndex = 0;
-
-                foreach (int foundIndex in foundMatches)
-                {
-                    // Get the difference between the value of the oldArrayIndex and the current 
-                    int charsBeforeMatch = foundIndex - oldArrayIndex;
-                    // Copy any characters before the index of the match that is currently selected.
-                    Array.Copy(this.characters, oldArrayIndex, newChars, newArrayIndex, charsBeforeMatch);
-
-                    // Add the sum of the number of characters before the current match and the length of the oldValue
-                    // This sets the index up for the next time characters need to be copied over, so nothing gets over written.
-                    oldArrayIndex = oldArrayIndex + charsBeforeMatch + oldValue.Length;
-
-                    // Add the characters copied before the match to the index to move it to correct position to copy the newValue to.
-                    newArrayIndex = newArrayIndex + charsBeforeMatch;
-
-
-                    // Copy the new value over to the new array if there are any characters to copy over.
-                    if (newValueChars != null)
-                    {
-                        Array.Copy(newValueChars, 0, newChars, newArrayIndex, newValueLength);
-
-                        // Need to increament the oldArray index by the length of the new value.
-                        // This sets the index up to copy over next set of characters, so nothing gets over written.
-                        newArrayIndex = newArrayIndex + newValueLength;
-                    }
-
-
-                }
-
-                //Copy over any remaining characters after the last matched sequence in the characters array..
-                if (oldArrayIndex < this.Length)
-                    Array.Copy(this.characters, oldArrayIndex, newChars, newArrayIndex, this.Length - oldArrayIndex);
-
-                this.characters = newChars;
-                this.Length = newLength;
-            }
-
-            return this;
+            // Call the substring version of the method because 
+            // the full length of the current string is just the larges substring
+            return Replace(oldValue, newValue, 0, this.Length);
         }
 
         public StringBuilderR Replace(char oldChar, char newChar, int startIndex, int length)
         {
+            // Return the current instance because there is nothing to replace.
             if (this.Length == 0)
                 return this;
 
@@ -450,14 +357,18 @@ namespace DataStructuresR
 
         public StringBuilderR Replace(string oldValue, string? newValue, int startIndex, int length)
         {
+            // Return the current instance because there is nothing to replace.
+            if (this.Length == 0)
+                return this;
+
             if (startIndex >= this.Length)
-                throw new ArgumentOutOfRangeException("startIndex");
+                throw new ArgumentOutOfRangeException(nameof(startIndex), "The start index cannot be greater than the length of the currents instance's string.");
 
             if (startIndex + length >= this.Length)
-                throw new ArgumentOutOfRangeException("length");
+                throw new ArgumentOutOfRangeException(nameof(length), "The specified substring is beyond the length of the instance's string.");
 
             if (string.IsNullOrEmpty(oldValue))
-                throw new ArgumentException("The value being replaced cannot be an empty string.", "oldValue");
+                throw new ArgumentException("The value being replaced cannot be an empty string.", nameof(oldValue));
 
             // There will be no match of the oldValue if it is longer than substring.
             // Just return the current instance without doing work.
@@ -472,25 +383,30 @@ namespace DataStructuresR
 
             // Find matches within the substring.
             List<int> foundMatches = new List<int>();
+            int prevMatchCount;
 
-            //int cycleIncrement;
-            for (int i = startIndex, h = 0, limit = startIndex + length, cycleIncrement = 1;
-                i < limit; 
-                i = i + cycleIncrement, h = 0, cycleIncrement = 1)
+            for (int i = startIndex, limit = startIndex + length;
+                    // Terminate the loop if i is greater than the leng of the specified substring
+                    // or if the remaing characters in the substring are less than the length of the oldValue.
+                    i < limit && length - i >= oldValue.Length; 
+                    // If an additional match of the old value is found, 
+                    // then increment by the length of the oldValue. Otherwise increment by 1.
+                    i = i + (foundMatches.Count > prevMatchCount ? oldValue.Length : 1))
             {
+                prevMatchCount = foundMatches.Count;
 
-                while (h < oldValue.Length && characters[i + h] == oldValue[h])
-                    h++;
-
-                if (h == oldValue.Length)
+                for (int j = 0; i + j < limit && j <= oldValue.Length; j++)
                 {
-                    cycleIncrement = oldValue.Length;
-                    foundMatches.Add(i);
+                    // If j reached the length of the oldValue then we found the match of the old value.
+                    if (j == oldValue.Length)
+                        foundMatches.Add(i);
+                    else if (characters[i + j] != oldValue[j])
+                        j = oldValue.Length;
                 }
             }
 
-            // Copy over the characters
-
+            // If any instances of the oldValue was found in the substring,
+            // then copy over the existing characters replacing any instances of the oldValue with newValue
             if (foundMatches.Count > 0)
             {
                 int newValueLength = 0;
