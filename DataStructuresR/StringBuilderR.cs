@@ -33,6 +33,25 @@ namespace DataStructuresR
                 
         }
 
+        public char this[int index]
+        {
+            get 
+            {
+                if (index < 0 || index >= this.Length)
+                    throw new IndexOutOfRangeException();
+
+                return characters[index]; 
+            }
+
+            set
+            {
+                if (index < 0 || index >= this.Length)
+                    throw new IndexOutOfRangeException();
+
+                characters[index] = value;
+            }
+        }
+
         #region Private Methods
 
         private char[] InitializCapacityGetCharArray(int? capacity)
