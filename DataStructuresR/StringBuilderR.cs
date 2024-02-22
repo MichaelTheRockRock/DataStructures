@@ -96,6 +96,42 @@ namespace DataStructuresR
                 this.characters[j] = newCharacters[i];
         }
 
+        private StringBuilderR InsertCharArray(int index, char[]? value, int startIndex, int count)
+        {
+            if (value == null)
+                return this;
+
+            if (count > value.Length)
+                throw new ArgumentOutOfRangeException(nameof(count), "Specified to insert more characters than there are in value.");
+
+            if (startIndex + count > value.Length)
+                throw new ArgumentOutOfRangeException(nameof(count), "Specified to insert more characters than there are in value from the specified start index.");
+
+            if (index < 0 || index > this.Length)
+                throw new ArgumentOutOfRangeException(nameof(index), "The index cannot be below zero and it cannot be larger than the current string.");
+
+            if (index == this.Length)
+                return this.Append(value);
+
+            int newLength = this.Length + value.Length;
+
+            char[] newCollection = new char[newLength];
+
+            for (int i = 0; i < index; i++)
+                newCollection[i] = characters[i];
+
+            for (int i = startIndex, j = index; i < count; i++, j++)
+                newCollection[j] = value[i];
+
+            for (int i = index, j = index + count; i < this.Length; i++, j++)
+                newCollection[j] = characters[i];
+
+            this.characters = newCollection;
+            this.Length = newLength;
+
+            return this;
+        }
+
         #endregion Private Methods
 
         #region Constructors
@@ -213,8 +249,7 @@ namespace DataStructuresR
         /// </returns>
         public StringBuilderR AppendLine(char a)
         {
-            AddCharacters(new char[] { a });
-            AddCharacters(new char[] { '\n' });
+            AddCharacters(new char[] { a, '\n' });
 
             return this;
         }
@@ -336,6 +371,7 @@ namespace DataStructuresR
             return this;
         }
 
+        #region Replace Methods
         public StringBuilderR Replace(char oldChar, char newChar)
         {
             // Call the substring version of the method because 
@@ -484,5 +520,124 @@ namespace DataStructuresR
 
             return this;
         }
+        #endregion Replace Methods
+
+        #region Insert Methods
+        public StringBuilderR Insert(int index, char value)
+        {
+            return InsertCharArray(index, new char[] { value }, 0, 1);
+        }
+
+        public StringBuilderR Insert(int index, bool value)
+        {
+            char[] _value = value.ToString().ToCharArray();
+
+            return InsertCharArray(index, _value, 0, _value.Length);
+        }
+
+        public StringBuilderR Insert(int index, char[]? value)
+        {
+            return InsertCharArray(index, value, 0, value?.Length ?? 0);
+        }
+
+        public StringBuilderR Insert(int index, byte value)
+        {
+            char[] _value = value.ToString().ToCharArray();
+
+            return InsertCharArray(index, _value, 0, _value.Length);
+        }
+
+        public StringBuilderR Insert(int index, decimal value)
+        {
+            char[] _value = value.ToString().ToCharArray();
+
+            return InsertCharArray(index, _value, 0, _value.Length);
+        }
+
+        public StringBuilderR Insert(int index, double value)
+        {
+            char[] _value = value.ToString().ToCharArray();
+
+            return InsertCharArray(index, _value, 0, _value.Length);
+        }
+
+        public StringBuilderR Insert(int index, float value)
+        {
+            char[] _value = value.ToString().ToCharArray();
+
+            return InsertCharArray(index, _value, 0, _value.Length);
+        }
+
+        public StringBuilderR Insert(int index, int value)
+        {
+            char[] _value = value.ToString().ToCharArray();
+
+            return InsertCharArray(index, _value, 0, _value.Length);
+        }
+
+        public StringBuilderR Insert(int index, long value)
+        {
+            char[] _value = value.ToString().ToCharArray();
+
+            return InsertCharArray(index, _value, 0, _value.Length);
+        }
+
+        public StringBuilderR Insert(int index, object? value)
+        {
+            char[]? _value = value?.ToString()?.ToCharArray();
+
+            return InsertCharArray(index, _value, 0, _value?.Length ?? 0);
+        }
+
+        public StringBuilderR Insert(int index, sbyte value)
+        {
+            char[] _value = value.ToString().ToCharArray();
+
+            return InsertCharArray(index, _value, 0, _value.Length);
+        }
+
+        public StringBuilderR Insert(int index, short value)
+        {
+            char[] _value = value.ToString().ToCharArray();
+
+            return InsertCharArray(index, _value, 0, _value.Length);
+        }
+
+        public StringBuilderR Insert(int index, uint value)
+        {
+            char[] _value = value.ToString().ToCharArray();
+
+            return InsertCharArray(index, _value, 0, _value.Length);
+        }
+
+        public StringBuilderR Insert(int index, ulong value)
+        {
+            char[] _value = value.ToString().ToCharArray();
+
+            return InsertCharArray(index, _value, 0, _value.Length);
+        }
+
+        public StringBuilderR Insert(int index, ushort value)
+        {
+            char[] _value = value.ToString().ToCharArray();
+
+            return InsertCharArray(index, _value, 0, _value.Length);
+        }
+
+        public StringBuilderR Insert(int index, string? value)
+        {
+            return InsertCharArray(index, value?.ToCharArray(), 0, value?.Length ?? 0);
+        }
+
+        public StringBuilderR Insert(int index, string? value, int count)
+        {
+            return InsertCharArray(index, value?.ToCharArray(), 0, count);
+        }
+
+        public StringBuilderR Insert(int index, char[]? value, int startIndex, int count)
+        {
+            return InsertCharArray(index, value, startIndex, count);
+        }
+        #endregion Insert Methods
     }
 }
