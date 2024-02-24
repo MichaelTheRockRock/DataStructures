@@ -28,7 +28,15 @@ namespace DataStructuresR
                 if (value > MaxCapacity)
                     throw new ArgumentException("The capacity cannot be above the maximum capacity.");
 
-                capacity = value;
+                if (value != this.capacity)
+                {
+                    char[] newCollection = new char[value];
+
+                    for (int i = 0; i < this.Length; i++)
+                        newCollection[i] = this.characters[i];
+
+                    capacity = value;
+                }
             }
                 
         }
@@ -64,36 +72,17 @@ namespace DataStructuresR
             return new char [this.Capacity];
         }
 
-        private void IncreaseCapacity()
+        private void IncreaseCapacityByNewLength(int newLength)
         {
-            capacity = capacity * 2;
-        }
-
-        private void AddCharacters(char[] newCharacters)
-        {
-            // Record the current length know when to start appending the passed
-            // in newCharacters to the characters array.
-            int oldLength = Length;
-
-
-            // TODO: Possibly need to remove all empty strings from the newCharacters array.
-            Length = Length + newCharacters.Length;
-
-            if (Length >= Capacity)
+            if (newLength > this.Capacity)
             {
-                while (Length >= Capacity)
-                    IncreaseCapacity();
+                int newCapacity = this.Capacity;
 
-                char[] largerStorage = new char[Capacity];
+                while (newLength > newCapacity)
+                    newCapacity = newCapacity * 2;
 
-                for (int i = 0; i < this.characters.Length; i++)
-                    largerStorage[i] = this.characters[i];
-
-                this.characters = largerStorage;
+                this.Capacity = newCapacity;
             }
-
-            for (int i = 0, j = oldLength; i < newCharacters.Length; i++, j++)
-                this.characters[j] = newCharacters[i];
         }
 
         private StringBuilderR InsertCharArray(int index, char[]? value, int startIndex, int count)
@@ -110,12 +99,17 @@ namespace DataStructuresR
             if (index < 0 || index > this.Length)
                 throw new ArgumentOutOfRangeException(nameof(index), "The index cannot be below zero and it cannot be larger than the current string.");
 
+            int newLength = this.Length + count;
+
+            IncreaseCapacityByNewLength(newLength);
+
+            // TODO: Re-code this so that this is done in place.
+            char[] newCollection;
+
             if (index == this.Length)
-                return this.Append(value);
-
-            int newLength = this.Length + value.Length;
-
-            char[] newCollection = new char[newLength];
+                newCollection = this.characters;
+            else
+                newCollection = new char[this.Capacity];
 
             for (int i = 0; i < index; i++)
                 newCollection[i] = characters[i];
@@ -145,36 +139,32 @@ namespace DataStructuresR
             this.characters = InitializCapacityGetCharArray(capacity);
         }
 
-        public StringBuilderR(string? str)
+        public StringBuilderR(string? value)
         {
             this.characters = InitializCapacityGetCharArray(null);
 
-            if (str != null )
-                this.AddCharacters(str.ToCharArray());
+            this.InsertCharArray(this.Length, value?.ToCharArray(), 0, value?.Length ?? 0);
         }
 
-        public StringBuilderR(string? str, int capacity)
+        public StringBuilderR(string? value, int capacity)
         {
             this.characters = InitializCapacityGetCharArray(capacity);
 
-            if (str != null)
-                this.AddCharacters(str.ToCharArray());
+            this.InsertCharArray(this.Length, value?.ToCharArray(), 0, value?.Length ?? 0);
         }
 
-        public StringBuilderR(char[] str)
+        public StringBuilderR(char[] value)
         {
             this.characters = InitializCapacityGetCharArray(null);
 
-            if (str.Length != 0)
-                this.AddCharacters(str);
+            this.InsertCharArray(this.Length, value, 0, value?.Length ?? 0);
         }
 
-        public StringBuilderR(char[] str, int capacity)
+        public StringBuilderR(char[] value, int capacity)
         {
             this.characters = InitializCapacityGetCharArray(capacity);
 
-            if (str.Length != 0)
-                this.AddCharacters(str);
+            this.InsertCharArray(this.Length, value, 0, value?.Length ?? 0);
         }
         #endregion Constructors
 
@@ -225,7 +215,6 @@ namespace DataStructuresR
         }
 
         #region Append Methods
-
         /// <summary>
         /// 
         /// </summary>
@@ -233,25 +222,155 @@ namespace DataStructuresR
         /// <returns>
         /// Returns a reference this instance after the operation is complete
         /// </returns>
-        public StringBuilderR Append(char a)
+        public StringBuilderR Append(char value)
         {
-            AddCharacters(new char[] { a });
-
-            return this;
+            return InsertCharArray(this.Length, new char[] { value }, 0, 1);
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="a"></param>
-        /// <returns>
-        /// Returns a reference this instance after the operation is complete
-        /// </returns>
-        public StringBuilderR AppendLine(char a)
+        public StringBuilderR Append(bool value)
         {
-            AddCharacters(new char[] { a, '\n' });
+            char[] charValue = value.ToString().ToArray();
 
-            return this;
+            return InsertCharArray(this.Length, charValue, 0, charValue.Length);
+        }
+
+        public StringBuilderR Append(byte value)
+        {
+            char[] charValue = value.ToString().ToArray();
+
+            return InsertCharArray(this.Length, charValue, 0, charValue.Length);
+        }
+
+        public StringBuilderR Append(char[]? value)
+        {
+            return InsertCharArray(this.Length, value, 0, value?.Length ?? 0);
+        }
+
+        public StringBuilderR Append(decimal value)
+        {
+            char[] charValue = value.ToString().ToArray();
+
+            return InsertCharArray(this.Length, charValue, 0, charValue.Length);
+        }
+
+        public StringBuilderR Append(double value)
+        {
+            char[] charValue = value.ToString().ToArray();
+
+            return InsertCharArray(this.Length, charValue, 0, charValue.Length);
+        }
+
+        public StringBuilderR Append(float value)
+        {
+            char[] charValue = value.ToString().ToArray();
+
+            return InsertCharArray(this.Length, charValue, 0, charValue.Length);
+        }
+
+        public StringBuilderR Append(int value)
+        {
+            char[] charValue = value.ToString().ToArray();
+
+            return InsertCharArray(this.Length, charValue, 0, charValue.Length);
+        }
+
+        public StringBuilderR Append(long value)
+        {
+            char[] charValue = value.ToString().ToArray();
+
+            return InsertCharArray(this.Length, charValue, 0, charValue.Length);
+        }
+
+        public StringBuilderR Append(object? value)
+        {
+            char[]? charValue = value?.ToString()?.ToArray();
+
+            return InsertCharArray(this.Length, charValue, 0, charValue?.Length ?? 0);
+        }
+
+        public StringBuilderR Append(sbyte value)
+        {
+            char[] charValue = value.ToString().ToArray();
+
+            return InsertCharArray(this.Length, charValue, 0, charValue.Length);
+        }
+
+        public StringBuilderR Append(short value)
+        {
+            char[] charValue = value.ToString().ToArray();
+
+            return InsertCharArray(this.Length, charValue, 0, charValue.Length);
+        }
+
+        public StringBuilderR Append(string? value)
+        {
+            char[]? charValue = value?.ToArray();
+
+            return InsertCharArray(this.Length, charValue, 0, charValue?.Length ?? 0);
+        }
+
+        public StringBuilderR Append(StringBuilderR? value)
+        {
+            char[]? charValue = value?.ToString()?.ToArray();
+
+            return InsertCharArray(this.Length, charValue, 0, charValue?.Length ?? 0);
+        }
+
+        public StringBuilderR Append(uint value)
+        {
+            char[] charValue = value.ToString().ToArray();
+
+            return InsertCharArray(this.Length, charValue, 0, charValue.Length);
+        }
+
+        public StringBuilderR Append(ulong value)
+        {
+            char[] charValue = value.ToString().ToArray();
+
+            return InsertCharArray(this.Length, charValue, 0, charValue.Length);
+        }
+
+        public StringBuilderR Append(ushort value)
+        {
+            char[] charValue = value.ToString().ToArray();
+
+            return InsertCharArray(this.Length, charValue, 0, charValue.Length);
+        }
+
+        public StringBuilderR Append(char value, int repeatCount)
+        {
+            char[] charValue = new char[repeatCount];
+
+            for (int i = 0; i < repeatCount; i++)
+                charValue[i] = value;
+
+            return InsertCharArray(this.Length, charValue, 0, charValue.Length);
+        }
+
+        public StringBuilderR Append(char[]? value, int startIndex, int charCount)
+        {
+            return InsertCharArray(this.Length, value, startIndex, charCount);
+        }
+
+        public StringBuilderR Append(string? value, int startIndex, int count)
+        {
+            char[]? charValue = value?.ToString()?.ToCharArray();
+
+            return InsertCharArray(this.Length, charValue, startIndex, count);
+        }
+
+        public StringBuilderR Append(StringBuilderR? value, int startIndex, int count)
+        {
+            char[]? charValue = value?.ToString()?.ToCharArray();
+
+            return InsertCharArray(this.Length, charValue, startIndex, count);
+        }
+        #endregion Append Methods
+
+        #region Appendline
+        public StringBuilderR Appendline()
+        {
+            return InsertCharArray(this.Length, new char[] { '\n' }, 0, 1);
         }
 
         /// <summary>
@@ -261,56 +380,13 @@ namespace DataStructuresR
         /// <returns>
         /// Returns a reference this instance after the operation is complete
         /// </returns>
-        public StringBuilderR Append(char[] str)
+        public StringBuilderR AppendLine(string? value)
         {
-            AddCharacters(str);
+            char[] charValue = ((value ?? "") + "\n").ToCharArray();
 
-            return this;
+            return InsertCharArray(this.Length, charValue, 0, charValue.Length);
         }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="str"></param>
-        /// <returns>
-        /// Returns a reference this instance after the operation is complete
-        /// </returns>
-        public StringBuilderR AppendLine(char[] str)
-        {
-            AddCharacters(str);
-            AddCharacters(new char[] { '\n' });
-
-            return this;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="str"></param>
-        /// <returns>
-        /// Returns a reference this instance after the operation is complete
-        /// </returns>
-        public StringBuilderR Append(string str)
-        {
-            AddCharacters(str.ToArray());
-
-            return this;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="str"></param>
-        /// <returns>
-        /// Returns a reference this instance after the operation is complete
-        /// </returns>
-        public StringBuilderR AppendLine(string str)
-        {
-            AddCharacters(str.ToArray());
-            AddCharacters(new char[] { '\n' });
-
-            return this;
-        }
+        #endregion Appendline
 
         /// <summary>
         /// 
@@ -324,12 +400,12 @@ namespace DataStructuresR
         {
             string formattedStr = string.Format(str, args);
 
-            AddCharacters(formattedStr.ToArray());
+            char[] charValue = formattedStr.ToArray();
 
-            return this;
+            return InsertCharArray(this.Length, charValue, 0, charValue.Length);
         }
 
-        #endregion Append Methods
+        
 
         /// <summary>
         /// 
@@ -475,8 +551,7 @@ namespace DataStructuresR
 
                 int newLength = characters.Length - (oldValue.Length * foundMatches.Count) + (newValueLength * foundMatches.Count);
 
-                while (newLength > this.Capacity)
-                    IncreaseCapacity();
+                IncreaseCapacityByNewLength(newLength);
 
                 char[] newChars = new char[this.Capacity];
 
