@@ -425,3 +425,7 @@ FodyWeavers.xsd
 /DataStructuresR.Tests/obj/DataStructuresR.Tests.csproj.nuget.g.props
 /DataStructuresR.Tests/obj/project.assets.json
 /DataStructuresR.Tests/obj/project.nuget.cache
+/DataStructuresR.Tests/bin/Debug/net7.0/DataStructuresR.Tests.deps.json
+/DataStructuresR.Tests/obj/DataStructuresR.Tests.csproj.nuget.dgspec.json
+/DataStructuresR.Tests/obj/project.assets.json
+/DataStructuresR.Tests/obj/project.nuget.cache
