@@ -12,7 +12,7 @@ namespace DataStructuresR
     {
         private char[] characters;
         public int Length { get; private set; } = 0;
-        public int MaxCapacity => int.MaxValue;
+        public static int MaxCapacity => int.MaxValue;
         private const int DefaultCapacity = 16;
         private int capacity;
         public int Capacity { 
