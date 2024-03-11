@@ -68,7 +68,6 @@ namespace DataStructuresR.Tests.BinaryTree
         {
             Console.WriteLine("Begin: TestOrdering");
             BinaryTreeR<int> tree = new BinaryTreeR<int>();
-            List<int> treeOrdering = new List<int>();
 
             foreach (int value in testSet)
             {
@@ -78,14 +77,14 @@ namespace DataStructuresR.Tests.BinaryTree
 
             Console.WriteLine("Tree Node Count: " + tree.Count);
 
-            tree.Traverse(treeOrdering);
+            List<int> treeList = tree.GetOrderedList();
 
-            Assert.AreEqual(expectedOrdering.Count, treeOrdering.Count);
+            Assert.AreEqual(expectedOrdering.Count, treeList.Count);
 
-            for (int i = 0; i < treeOrdering.Count; i++)
+            for (int i = 0; i < treeList.Count; i++)
             {
-                Console.WriteLine("Index: {0} | Expected Value: {1} | Tree Value: {2}", i, treeOrdering[i], expectedOrdering[i]);
-                Assert.AreEqual(expectedOrdering[i], treeOrdering[i]);
+                Console.WriteLine("Index: {0} | Expected Value: {1} | Tree Value: {2}", i, treeList[i], expectedOrdering[i]);
+                Assert.AreEqual(expectedOrdering[i], treeList[i]);
             }
 
             Console.WriteLine("End: TestOrdering");

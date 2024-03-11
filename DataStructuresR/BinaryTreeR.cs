@@ -118,27 +118,36 @@ namespace DataStructuresR
         #endregion
         public void Traverse()
         {
-            Traverse(root, null);
+            Traverse(root);
         }
 
-        public void Traverse(List<T> values)
-        {
-            Traverse(root, values);
-        }
-
-        private void Traverse(BinaryTreeNodeR<T>? node, List<T>? values)
+        private void Traverse(BinaryTreeNodeR<T>? node)
         {
             if (node == null)
                 return;
 
-            Traverse(node.Left, values);
+            Traverse(node.Left);
+            Console.WriteLine(node.Value.ToString());
+            Traverse(node.Right);
+        }
 
-            if (values != null)
-                values.Add(node.Value);
-            else
-                Console.WriteLine(node.Value.ToString());
+        public List<T> GetOrderedList()
+        {
+            List<T> list = new List<T>();
 
-            Traverse(node.Right, values);
+            GetOrderedList(root, list);
+
+            return list;
+        }
+
+        private void GetOrderedList(BinaryTreeNodeR<T>? node, List<T> list)
+        {
+            if (node == null)
+                return;
+
+            GetOrderedList(node.Left, list);
+            list.Add(node.Value);
+            GetOrderedList(node.Right, list);
         }
 
         public void Insert(T value)
