@@ -282,7 +282,10 @@ namespace DataStructuresR
 
         public int GetBalanceFactor()
         {
-            return (Right?.Height ?? 0) - (Left?.Height ?? 0);
+            int rHeight = Right?.Height ?? 0;
+            int lHeight = Left?.Height ?? 0;
+
+            return rHeight - lHeight;
         }
 
         public void CalculateAndSetHeight()
