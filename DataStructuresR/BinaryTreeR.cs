@@ -7,23 +7,12 @@ using System.Xml.Linq;
 
 namespace DataStructuresR
 {
-    internal class BinaryTreeR<T> where T : IComparable<T>
+    public class BinaryTreeR<T> where T : IComparable<T>
     {
         private BinaryTreeNodeR<T>? root;
         public int Count { get; private set; } = 0;
 
         #region Private Methods
-        private static void CalculateAndSetHeight(BinaryTreeNodeR<T> node)
-        {
-            int lHeight = node.Left?.Height ?? 0;
-            int rHeight = node.Right?.Height ?? 0;
-
-            if (lHeight > rHeight)
-                node.Height = lHeight + 1;
-            else // When rHeight > lHeight or rHeight == lHeight
-                node.Height = rHeight + 1;
-        }
-
         private static BinaryTreeNodeR<T> RotateLeft(BinaryTreeNodeR<T> node)
         {
             if (node.Right == null)
@@ -33,10 +22,12 @@ namespace DataStructuresR
             node.Right = pivot.Left;
 
             pivot.Left = node;
-            node.Height--; // node that has been passed in level;
+            //node.Height--; // node that has been passed in level;
+            node.CalculateAndSetHeight();
 
             node = pivot;
-            pivot.Height++; // the pivot node has gone up a level;
+            //pivot.Height++; // the pivot node has gone up a level;
+            node.CalculateAndSetHeight();
 
             return node;
         }
@@ -47,14 +38,15 @@ namespace DataStructuresR
                 throw new NullReferenceException("The left branch of the passed in node is null.");
 
             BinaryTreeNodeR<T> pivot = node.Left;
-
             node.Left = pivot.Right;
 
             pivot.Right = node;
-            node.Height--; // node that has been passed in level;
+            //node.Height--; // node that has been passed in level;
+            node.CalculateAndSetHeight();
 
             node = pivot;
-            pivot.Height++; // the pivot node has gone up a level;
+            //pivot.Height++; // the pivot node has gone up a level;
+            node.CalculateAndSetHeight();
 
             return node;
         }
@@ -67,7 +59,15 @@ namespace DataStructuresR
             {
                 // The right branch is heavy and needs to be re-balanced
 
-                if (node.Right!.GetBalanceFactor() >= 0) // This is the RightRight case
+                
+                if (balanceFactor != 2)
+                    throw new Exception(string.Format("ERROR: Expected balance factor to be 2. The balance factor for node {0} is {1}.", node.Value, balanceFactor));
+
+                if (node.Right == null)
+                    throw new Exception($"ERROR: The right branch of the node ({node.Value}) is null when the balance factor is greater than 1.");
+
+
+                if (node.Right.GetBalanceFactor() >= 0) // This is the RightRight case
                 {
                     //rotate left
                     node = BinaryTreeR<T>.RotateLeft(node);
@@ -85,7 +85,13 @@ namespace DataStructuresR
             {
                 // The left branch is heavy and needs to be re-balanced
 
-                if (node.Left!.GetBalanceFactor() <= 0)
+                if (balanceFactor !=-2)
+                    throw new Exception(string.Format("ERROR: Expected balance factor to be -2. The balance factor for node {0} is {1}.", node.Value, balanceFactor));
+
+                if (node.Left == null)
+                    throw new Exception($"ERROR: The left branch of the node ({node.Value}) is null when the balance factor is less than -1.");
+
+                if (node.Left.GetBalanceFactor() <= 0)
                 {
                     // rotate right
                     node.Left = BinaryTreeR<T>.RotateRight(node);
@@ -106,17 +112,27 @@ namespace DataStructuresR
         #endregion
         public void Traverse()
         {
-            Traverse(root);
+            Traverse(root, null);
         }
 
-        private void Traverse(BinaryTreeNodeR<T>? node)
+        public void Traverse(List<T> values)
+        {
+            Traverse(root, values);
+        }
+
+        private void Traverse(BinaryTreeNodeR<T>? node, List<T>? values)
         {
             if (node == null)
                 return;
 
-            Traverse(node.Left);
-            Console.WriteLine(node.Value.ToString());
-            Traverse(node.Right);
+            Traverse(node.Left, values);
+
+            if (values != null)
+                values.Add(node.Value);
+            else
+                Console.WriteLine(node.Value.ToString());
+
+            Traverse(node.Right, values);
         }
 
         public void Insert(T value)
@@ -133,15 +149,16 @@ namespace DataStructuresR
             }
             else
             {
-                if (node.Value.CompareTo(value) < 0)
+                int compareValue = node.Value.CompareTo(value);
+                if (compareValue > 0)
                     node.Left = Insert(node.Left, value);
-                else if (node.Value.CompareTo(value) > 0)
+                else if (compareValue < 0)
                     node.Right = Insert(node.Right, value);
-                else // node.Value.CompareTo(value) == 0
+                else // compareValue == 0
                     throw new Exception(string.Format("The value {0} has been already been added to the tree.", value.ToString()));
             }
 
-            BinaryTreeR<T>.CalculateAndSetHeight(node);
+            node.CalculateAndSetHeight();
 
             node = BinaryTreeR<T>.BalanceTree(node);
 
@@ -158,11 +175,13 @@ namespace DataStructuresR
             if (node == null)
                 throw new Exception(string.Format("The provided value is not in the tree: {0}", value.ToString()));
 
-            if (node.Value.CompareTo(value) < 0)
+            int compareValue = node.Value.CompareTo(value);
+
+            if (compareValue > 0)
                 node.Left = Delete(node.Left, value, height + 1);
-            else if (node.Value.CompareTo(value) > 0)
+            else if (compareValue < 0)
                 node.Right = Delete(node.Right, value, height + 1);
-            else // node.Value.CompareTo(value) == 0
+            else // compareValue == 0
             {
                 // If check passes, then node has a left and right branch
                 if (node.Left != null && node.Right != null)
@@ -218,7 +237,7 @@ namespace DataStructuresR
             if (node != null)
             {
                 // Calculate Height of current node 
-                BinaryTreeR<T>.CalculateAndSetHeight(node);
+                node.CalculateAndSetHeight();
 
                 node = BinaryTreeR<T>.BalanceTree(node);
             }
@@ -240,9 +259,9 @@ namespace DataStructuresR
 
             if (compareValue == 0)
                 return true;
-            else if (compareValue < 0)
+            else if (compareValue > 0)
                 return Search(node.Left, value);
-            else // compareValue > 0
+            else // compareValue < 0
                 return Search(node.Right, value);
         }
     }
@@ -250,6 +269,7 @@ namespace DataStructuresR
     internal sealed class BinaryTreeNodeR<T>
     {
         public T Value { get; set; }
+        public BinaryTreeNodeR<T>? Parent { get; set; } // Not using parent at this time.
         public BinaryTreeNodeR<T>? Left { get; set; }
         public BinaryTreeNodeR<T>? Right {  get; set; }
         public int Height { get; set; }
@@ -262,7 +282,18 @@ namespace DataStructuresR
 
         public int GetBalanceFactor()
         {
-            return Right?.Height ?? 0 + Left?.Height ?? 0;
+            return (Right?.Height ?? 0) - (Left?.Height ?? 0);
+        }
+
+        public void CalculateAndSetHeight()
+        {
+            int lHeight = this.Left?.Height ?? 0;
+            int rHeight = this.Right?.Height ?? 0;
+
+            if (lHeight > rHeight)
+                this.Height = lHeight + 1;
+            else // When rHeight > lHeight or rHeight == lHeight
+                this.Height = rHeight + 1;
         }
     }
 }
