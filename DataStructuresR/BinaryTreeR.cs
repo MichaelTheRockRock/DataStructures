@@ -18,15 +18,18 @@ namespace DataStructuresR
             if (node.Right == null)
                 throw new NullReferenceException("The right branch of the passed in node is null.");
 
+            // We pivot around the right child when doing a left rotation.
             BinaryTreeNodeR<T> pivot = node.Right;
+
+            // Do the left rotation
             node.Right = pivot.Left;
-
             pivot.Left = node;
-            //node.Height--; // node that has been passed in level;
-            node.CalculateAndSetHeight();
-
             node = pivot;
-            //pivot.Height++; // the pivot node has gone up a level;
+
+            // Re-calculate the height of the old parent first as it has moved down a level.
+            // This must be done first because it is now the child of the pivot and will affect the pivot's height.
+            node.Left.CalculateAndSetHeight(); 
+            // Re-calculate the height of the pivot as it was moved up a level
             node.CalculateAndSetHeight();
 
             return node;
@@ -37,15 +40,18 @@ namespace DataStructuresR
             if (node.Left == null)
                 throw new NullReferenceException("The left branch of the passed in node is null.");
 
+            // We pivot around the left child when doing a right rotation.
             BinaryTreeNodeR<T> pivot = node.Left;
+
+            // Do the right rotation
             node.Left = pivot.Right;
-
             pivot.Right = node;
-            //node.Height--; // node that has been passed in level;
-            node.CalculateAndSetHeight();
-
             node = pivot;
-            //pivot.Height++; // the pivot node has gone up a level;
+
+            // Re-calculate the height of the old parent first as it has moved down a level.
+            // This must be done first because it is now the child of the pivot and will affect the pivot's height.
+            node.Right.CalculateAndSetHeight();
+            // Re-calculate the height of the pivot as it was moved up a level
             node.CalculateAndSetHeight();
 
             return node;
