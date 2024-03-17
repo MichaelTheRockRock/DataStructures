@@ -45,13 +45,12 @@ namespace DataStructuresR
             int index;
             int i = 0; // The probe position
 
-            // constanst used in probing
+            // constants used in probing
             int c1 = 1; // Constant 1
             int c2 = 1; // Constant 2
 
             do
             {
-                // TODO: Think about moving calculation here.
                 index = (hashCode + c1 * i + c2 * (i * i)) % buckets.Length;
 
                 // Value found at index
@@ -83,9 +82,28 @@ namespace DataStructuresR
             return null;
         }
 
-        private void ResizeTable()
+        // Used to have the ResizeTable method to increase or decrease the size of the table.
+        private enum ResizeVelocity { Decrease, Increase }
+        
+        private void ResizeTable(ResizeVelocity velocity)
         {
-            int newLength = buckets.Length * 2;
+            int newLength;
+
+            switch(velocity)
+            {
+                case ResizeVelocity.Decrease:
+                    newLength = buckets.Length / 2;
+
+                    if (newLength < DefaultCapacity)
+                        newLength = DefaultCapacity;
+
+                    break;
+                case ResizeVelocity.Increase:
+                    newLength = buckets.Length * 2;
+                    break;
+                default:
+                    throw new NotImplementedException();
+            }    
 
             HashNodeR<T, V>?[] newBuckets = new HashNodeR<T, V>[newLength];
             HashNodeR<T, V>?[] oldTableReference = buckets;
@@ -132,6 +150,9 @@ namespace DataStructuresR
 
                 HashNodeR<T, V>? node = buckets[index.Value];
 
+                if (node == null)
+                    throw new NullReferenceException(string.Format("Un-unexpected null value was found at the key \"{0}\"", key));
+
                 node.Value = value;
             }
         }
@@ -141,35 +162,33 @@ namespace DataStructuresR
             int? index = FindIndex(key, HashOperations.Search);
 
             if (!index.HasValue)
-                throw new ArgumentException("Could not find key in the table.", nameof(key));
+                throw new ArgumentException("ERROR: Could not find key in the table.", nameof(key));
 
-            return buckets[index.Value].Value;
+            if (buckets[index.Value] == null)
+                throw new NullReferenceException(string.Format("ERROR: Could not access the value at the index \"{0}\" given the key \"{0}\"", index, key));
+
+            return (buckets[index.Value] ?? throw new Exception("ERROR: ")).Value;
         }
-
-        
 
         public void Insert(T key, V value)
         {
-            // TODO: Code method to resolve collisions
-            // Plan to use quadratic probing
             int? index = FindIndex(key, HashOperations.Insert);
 
-            if (index == null)
+            while (index == null)
             {
-                ResizeTable();
+                ResizeTable(ResizeVelocity.Increase);
 
                 index = FindIndex(key, HashOperations.Insert);
             }
 
-            if (index.HasValue)
-            {
-                buckets[index.Value] = new HashNodeR<T, V>(key, value);
-                this.Count++;
-            }
-            else
-            {
-                throw new Exception("Unable to calculate a hash.");
-            }
+            if (!index.HasValue)
+                throw new Exception(string.Format("ERROR: Unable to calculate a hash FRO THE KEY \"{0}\".", key));
+
+            buckets[index.Value] = new HashNodeR<T, V>(key, value);
+            this.Count++;
+
+            if (LoadFactor >= LoadFactorMax)
+                ResizeTable(ResizeVelocity.Increase);
         }
 
         public void Delete(T key)
@@ -177,12 +196,13 @@ namespace DataStructuresR
             int? index = FindIndex(key, HashOperations.Delete);
 
             if (index == null)
-                throw new Exception("Could not find the key in the table");
+                throw new Exception("ERROR: Could not find the key in the table");
 
             buckets[index.Value] = null;
             this.Count--;
 
-            return;
+            if (LoadFactor < LoadFactorMax / 4 && buckets.Length > DefaultCapacity )
+                ResizeTable(ResizeVelocity.Decrease);
         }
 
         public bool Contains(T key)
@@ -194,7 +214,10 @@ namespace DataStructuresR
 
             HashNodeR<T, V>? node = buckets[index.Value];
 
-            return node == null ? false : true;
+            if (node == null)
+                throw new Exception("ERROR: Could not retrieve value when expected.");
+
+            return true;
         }
     }
 
