@@ -13,7 +13,6 @@ namespace DataStructuresR
          * Hash Tables
          * Tree
          * Graph
-         * StringBuilder
          * */
     }
 }

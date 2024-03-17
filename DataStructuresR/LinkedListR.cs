@@ -354,11 +354,11 @@ namespace DataStructuresR
                     return Current!;
                 }
             }
-            
+
 
             public void Dispose()
             {
-                throw new NotImplementedException();
+                // Nothing to dispose of.
             }
 
             public bool MoveNext()
