@@ -60,18 +60,21 @@ namespace DataStructuresR
                     // If it does, then take the appropriate action according to passed in hash operation.
                     if (buckets[index]!.Key.CompareTo(key) == 0)
                     {
+                        // CHange this this to just return the index. Check the value inside the insert method to see if the value is equal.
                         if (HashOperations.Insert == hashOp)
                             throw new Exception(string.Format("The key ({0}) already exists in the table.", key.ToString()));
                         else // Search and Delete 
                             return index;
                     }
                 }
+                // The value at the index of the table is null.
                 else
                 {
                     if (HashOperations.Insert == hashOp)
                         return index;
                     else // Search and Delete
-                        throw new Exception(string.Format("The key ({0}) does not exist in the table.", key.ToString()));
+                        return null;    
+                    //throw new Exception(string.Format("The key ({0}) does not exist in the table.", key.ToString()));
                 }
 
                 i++;
