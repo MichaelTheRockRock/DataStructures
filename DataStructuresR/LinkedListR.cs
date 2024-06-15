@@ -358,7 +358,7 @@ namespace DataStructuresR
 
             public void Dispose()
             {
-                // Nothing to dispose of.
+
             }
 
             public bool MoveNext()

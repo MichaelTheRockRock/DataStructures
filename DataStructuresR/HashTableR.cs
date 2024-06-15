@@ -39,53 +39,87 @@ namespace DataStructuresR
         #endregion Constructors
 
         #region Private Methods
-        private int? FindIndex(T key, HashOperations hashOp)
-        {
-            int hashCode = key.GetHashCode();
-            int index;
-            int i = 0; // The probe position
 
-            // constanst used in probing
+        private int CalculateIndex(int hashCode, int probePosition)
+        {
+            // constants used in probing
             int c1 = 1; // Constant 1
             int c2 = 1; // Constant 2
 
+            return (hashCode + probePosition * (c1 + c2 * probePosition)) % buckets.Length;
+        }
+
+        private int GetProbeLimit()
+        {
+            return buckets.Length / 2;
+        }
+
+        private int? FindNewKeyIndex(T key)
+        {
+            int hashCode = key.GetHashCode();
+            int index;
+            int probePosition = 0;
+
             do
             {
-                // TODO: Think about moving calculation here.
-                index = (hashCode + c1 * i + c2 * (i * i)) % buckets.Length;
+                index = CalculateIndex(hashCode, probePosition);
 
-                // Value found at index
+                if (buckets[index] == null)
+                    return index;
+                else if (buckets[index]!.Key.CompareTo(key) == 0)
+                    throw new Exception(string.Format("The key ({0}) already exists in the table.", key.ToString()));
+
+                probePosition++;
+
+            } while (probePosition < GetProbeLimit());
+
+            // return null to indicate that there is no open index for an ineert and the table needs to be resized.
+            return null;
+        }
+
+        private int? FindExistingKeyIndex(T key)
+        {
+            int hashCode = key.GetHashCode();
+            int index;
+            int probePosition = 0;
+
+            do
+            {
+                index = CalculateIndex(hashCode, probePosition);
+
                 if (buckets[index] != null)
-                {
-                    // Does the provided key match the key at the index.
-                    // If it does, then take the appropriate action according to passed in hash operation.
                     if (buckets[index]!.Key.CompareTo(key) == 0)
-                    {
-                        if (HashOperations.Insert == hashOp)
-                            throw new Exception(string.Format("The key ({0}) already exists in the table.", key.ToString()));
-                        else // Search and Delete 
-                            return index;
-                    }
-                }
-                else
-                {
-                    if (HashOperations.Insert == hashOp)
                         return index;
-                    else // Search and Delete
-                        throw new Exception(string.Format("The key ({0}) does not exist in the table.", key.ToString()));
-                }
 
-                i++;
+                probePosition++;
 
-                // an index should be found for a value by the time it is half the length of the table.
-            } while (i < buckets.Length / 2);
+            } while (probePosition < GetProbeLimit());
 
             return null;
         }
 
-        private void ResizeTable()
+        // Used to have the ResizeTable method to increase or decrease the size of the table.
+        private enum ResizeVelocity { Decrease, Increase }
+        
+        private void ResizeTable(ResizeVelocity velocity)
         {
-            int newLength = buckets.Length * 2;
+            int newLength;
+
+            switch(velocity)
+            {
+                case ResizeVelocity.Decrease:
+                    newLength = buckets.Length / 2;
+
+                    if (newLength < DefaultCapacity)
+                        newLength = DefaultCapacity;
+
+                    break;
+                case ResizeVelocity.Increase:
+                    newLength = buckets.Length * 2;
+                    break;
+                default:
+                    throw new NotImplementedException();
+            }    
 
             HashNodeR<T, V>?[] newBuckets = new HashNodeR<T, V>[newLength];
             HashNodeR<T, V>?[] oldTableReference = buckets;
@@ -110,7 +144,7 @@ namespace DataStructuresR
 
             get
             {
-                int? index = FindIndex(key, HashOperations.Search);
+                int? index = FindExistingKeyIndex(key);
 
                 if (index == null)
                     throw new ArgumentException("Could not find key in the table.", nameof(key));
@@ -125,12 +159,15 @@ namespace DataStructuresR
 
             set
             {
-                int? index = FindIndex(key, HashOperations.Search);
+                int? index = FindExistingKeyIndex(key);
 
                 if (index == null)
                     throw new ArgumentException("Could not find key in the table.", nameof(key));
 
                 HashNodeR<T, V>? node = buckets[index.Value];
+
+                if (node == null)
+                    throw new NullReferenceException(string.Format("Un-unexpected null value was found at the key \"{0}\"", key));
 
                 node.Value = value;
             }
@@ -138,63 +175,67 @@ namespace DataStructuresR
 
         public V? Search(T key)
         {
-            int? index = FindIndex(key, HashOperations.Search);
+            int? index = FindExistingKeyIndex(key);
 
             if (!index.HasValue)
-                throw new ArgumentException("Could not find key in the table.", nameof(key));
+                throw new ArgumentException("ERROR: Could not find key in the table.", nameof(key));
 
-            return buckets[index.Value].Value;
+            if (buckets[index.Value] == null)
+                throw new NullReferenceException(string.Format("ERROR: Could not access the value at the index \"{0}\" given the key \"{0}\"", index, key));
+
+            return (buckets[index.Value] ?? throw new Exception("ERROR: ")).Value;
         }
-
-        
 
         public void Insert(T key, V value)
         {
-            // TODO: Code method to resolve collisions
-            // Plan to use quadratic probing
-            int? index = FindIndex(key, HashOperations.Insert);
+            int? index = FindNewKeyIndex(key);
 
-            if (index == null)
+            while (index == null)
             {
-                ResizeTable();
+                ResizeTable(ResizeVelocity.Increase);
 
-                index = FindIndex(key, HashOperations.Insert);
+                index = FindNewKeyIndex(key);
             }
 
-            if (index.HasValue)
-            {
-                buckets[index.Value] = new HashNodeR<T, V>(key, value);
-                this.Count++;
-            }
-            else
-            {
-                throw new Exception("Unable to calculate a hash.");
-            }
+            if (!index.HasValue)
+                throw new Exception(string.Format("ERROR: Unable to calculate a hash FRO THE KEY \"{0}\".", key));
+
+            buckets[index.Value] = new HashNodeR<T, V>(key, value);
+            this.Count++;
+
+            if (LoadFactor >= LoadFactorMax)
+                ResizeTable(ResizeVelocity.Increase);
         }
 
         public void Delete(T key)
         {
-            int? index = FindIndex(key, HashOperations.Delete);
+
+            int? index = FindExistingKeyIndex(key);
 
             if (index == null)
-                throw new Exception("Could not find the key in the table");
+                throw new Exception("ERROR: Could not find the key in the table");
 
             buckets[index.Value] = null;
             this.Count--;
 
-            return;
+            if (LoadFactor < LoadFactorMax / 4 && buckets.Length > DefaultCapacity )
+                ResizeTable(ResizeVelocity.Decrease);
         }
 
         public bool Contains(T key)
         {
-            int? index = FindIndex(key, HashOperations.Search);
+
+            int? index = FindExistingKeyIndex(key);
 
             if (index == null) 
                 return false;
 
             HashNodeR<T, V>? node = buckets[index.Value];
 
-            return node == null ? false : true;
+            if (node == null)
+                throw new Exception("ERROR: Could not retrieve value when expected.");
+
+            return true;
         }
     }
 
