@@ -6,7 +6,6 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
-using System.Runtime.CompilerServices;
 
 namespace DataStructuresR
 {
@@ -210,6 +209,7 @@ namespace DataStructuresR
 
         public void Delete(T key)
         {
+
             int? index = FindExistingKeyIndex(key);
 
             if (index == null)
@@ -224,6 +224,7 @@ namespace DataStructuresR
 
         public bool Contains(T key)
         {
+
             int? index = FindExistingKeyIndex(key);
 
             if (index == null) 
