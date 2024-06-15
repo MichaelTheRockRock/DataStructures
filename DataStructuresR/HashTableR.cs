@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using System.Runtime.CompilerServices;
 
 namespace DataStructuresR
 {
@@ -39,48 +40,61 @@ namespace DataStructuresR
         #endregion Constructors
 
         #region Private Methods
-        private int? FindIndex(T key, HashOperations hashOp)
-        {
-            int hashCode = key.GetHashCode();
-            int index;
-            int i = 0; // The probe position
 
+        private int CalculateIndex(int hashCode, int probePosition)
+        {
             // constants used in probing
             int c1 = 1; // Constant 1
             int c2 = 1; // Constant 2
 
+            return (hashCode + probePosition * (c1 + c2 * probePosition)) % buckets.Length;
+        }
+
+        private int GetProbeLimit()
+        {
+            return buckets.Length / 2;
+        }
+
+        private int? FindNewKeyIndex(T key)
+        {
+            int hashCode = key.GetHashCode();
+            int index;
+            int probePosition = 0;
+
             do
             {
-                index = (hashCode + c1 * i + c2 * (i * i)) % buckets.Length;
+                index = CalculateIndex(hashCode, probePosition);
 
-                // Value found at index
+                if (buckets[index] == null)
+                    return index;
+                else if (buckets[index]!.Key.CompareTo(key) == 0)
+                    throw new Exception(string.Format("The key ({0}) already exists in the table.", key.ToString()));
+
+                probePosition++;
+
+            } while (probePosition < GetProbeLimit());
+
+            // return null to indicate that there is no open index for an ineert and the table needs to be resized.
+            return null;
+        }
+
+        private int? FindExistingKeyIndex(T key)
+        {
+            int hashCode = key.GetHashCode();
+            int index;
+            int probePosition = 0;
+
+            do
+            {
+                index = CalculateIndex(hashCode, probePosition);
+
                 if (buckets[index] != null)
-                {
-                    // Does the provided key match the key at the index.
-                    // If it does, then take the appropriate action according to passed in hash operation.
                     if (buckets[index]!.Key.CompareTo(key) == 0)
-                    {
-                        // CHange this this to just return the index. Check the value inside the insert method to see if the value is equal.
-                        if (HashOperations.Insert == hashOp)
-                            throw new Exception(string.Format("The key ({0}) already exists in the table.", key.ToString()));
-                        else // Search and Delete 
-                            return index;
-                    }
-                }
-                // The value at the index of the table is null.
-                else
-                {
-                    if (HashOperations.Insert == hashOp)
                         return index;
-                    else // Search and Delete
-                        return null;    
-                    //throw new Exception(string.Format("The key ({0}) does not exist in the table.", key.ToString()));
-                }
 
-                i++;
+                probePosition++;
 
-                // an index should be found for a value by the time it is half the length of the table.
-            } while (i < buckets.Length / 2);
+            } while (probePosition < GetProbeLimit());
 
             return null;
         }
@@ -131,7 +145,7 @@ namespace DataStructuresR
 
             get
             {
-                int? index = FindIndex(key, HashOperations.Search);
+                int? index = FindExistingKeyIndex(key);
 
                 if (index == null)
                     throw new ArgumentException("Could not find key in the table.", nameof(key));
@@ -146,7 +160,7 @@ namespace DataStructuresR
 
             set
             {
-                int? index = FindIndex(key, HashOperations.Search);
+                int? index = FindExistingKeyIndex(key);
 
                 if (index == null)
                     throw new ArgumentException("Could not find key in the table.", nameof(key));
@@ -162,7 +176,7 @@ namespace DataStructuresR
 
         public V? Search(T key)
         {
-            int? index = FindIndex(key, HashOperations.Search);
+            int? index = FindExistingKeyIndex(key);
 
             if (!index.HasValue)
                 throw new ArgumentException("ERROR: Could not find key in the table.", nameof(key));
@@ -175,13 +189,13 @@ namespace DataStructuresR
 
         public void Insert(T key, V value)
         {
-            int? index = FindIndex(key, HashOperations.Insert);
+            int? index = FindNewKeyIndex(key);
 
             while (index == null)
             {
                 ResizeTable(ResizeVelocity.Increase);
 
-                index = FindIndex(key, HashOperations.Insert);
+                index = FindNewKeyIndex(key);
             }
 
             if (!index.HasValue)
@@ -196,7 +210,7 @@ namespace DataStructuresR
 
         public void Delete(T key)
         {
-            int? index = FindIndex(key, HashOperations.Delete);
+            int? index = FindExistingKeyIndex(key);
 
             if (index == null)
                 throw new Exception("ERROR: Could not find the key in the table");
@@ -210,7 +224,7 @@ namespace DataStructuresR
 
         public bool Contains(T key)
         {
-            int? index = FindIndex(key, HashOperations.Search);
+            int? index = FindExistingKeyIndex(key);
 
             if (index == null) 
                 return false;
